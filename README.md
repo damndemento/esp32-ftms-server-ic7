@@ -16,7 +16,9 @@ Then I splitted a [0.5m 3.5mm mono cable](https://www.amazon.de/gp/product/B011S
 
 This is how it looks like
 
-![cables](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_with_cables.jpg)
+![D1 cables](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_with_cables.jpg)
+
+![IC7 cables](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/IC7_cables.jpg)
 
 Then you can connect it to your bike without harming the IC7 - just disconnect the display from the sensor and plug the D1 mini ESP32 in between - et voilá - your IC7 speaks FTMS now.
 
