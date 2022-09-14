@@ -1,4 +1,4 @@
-# esp32-ftms-server-ic7
+# FTMS for Schwinn IC7 indoor cycling spinning bikes
 
 This is an ESP-32 based ftms-sensor that I edited for my Schwinn IC7 bike. Originally built for [jamesjmtaylor's](https://github.com/jamesjmtaylor/esp32-ftms-server)
  stationary bike stand.  It uses the [Indoor Bike Data characteristic](https://www.bluetooth.com/wp-content/uploads/Sitecore-Media-Library/Gatt/Xml/Characteristics/org.bluetooth.characteristic.indoor_bike_data.xml) of the FTMS BLE service.
@@ -20,4 +20,8 @@ This is how it looks like
 
 Then you can connect it to your bike without harming the IC7 - just disconnect the display from the sensor and plug the D1 mini ESP32 between - et voilá - your IC7 speaks FTMS now.
 
-Ready to connect to Zwift, WahooRGT or similar... have fun!
+Ready to connect to Zwift, WahooRGT or similar...
+
+actually it is powered with 5v via the sub jack - but I'm planning to add a rechargable battery and a shield for charging... and last but not least a little case to fit.
+
+ have fun!
