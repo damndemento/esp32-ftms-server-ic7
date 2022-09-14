@@ -18,7 +18,7 @@ This is how it looks like
 
 ![cables](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_with_cables.jpg)
 
-Then you can connect it to your bike without harming the IC7 - just disconnect the display from the sensor and plug the D1 mini ESP32 between - et voilá - your IC7 speaks FTMS now.
+Then you can connect it to your bike without harming the IC7 - just disconnect the display from the sensor and plug the D1 mini ESP32 in between - et voilá - your IC7 speaks FTMS now.
 
 Ready to connect to Zwift, WahooRGT or similar...
 
