@@ -22,6 +22,6 @@ Then you can connect it to your bike without harming the IC7 - just disconnect t
 
 Ready to connect to Zwift, WahooRGT or similar...
 
-actually it is powered with 5v via the usb jack - but I'm planning to add a rechargable battery and a shield for charging... and last but not least a little case to fit.
+actually it is powered with 5v via the usb jack - but I'm planning to add a rechargeable battery and a shield for charging... and last but not least a little case to fit.
 
  have fun!
