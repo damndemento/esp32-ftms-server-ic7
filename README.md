@@ -12,6 +12,6 @@ Then I splitted a [0.5m 3.5mm mono cable](https://www.amazon.de/gp/product/B011S
 
 ![resistors](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_resistors.jpg)
 
-![resistor pins](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_resistors.jpg)
+![resistor pins](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_resistor_pins.jpg)
 
-![cables](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_resistors.jpg)
+![cables](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_with_cables.jpg)
