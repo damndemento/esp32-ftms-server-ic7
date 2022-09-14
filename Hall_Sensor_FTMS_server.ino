@@ -3,7 +3,7 @@
     Based on Neil Kolban example for IDF: https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/tests/BLE%20Tests/SampleServer.cpp
     Ported to Arduino ESP32 by Evandro Copercini
     updates by chegewara
-    edited for Schwinn IC7 bikes by damndemento
+    edited for D1 mini ESP32 with Schwinn IC7 bikes by damndemento
 */
 
 #include <BLEDevice.h>
@@ -80,11 +80,9 @@ void setupBluetoothServer()
 }
 
 int digitalPin = 27;
-//int analogPin = 19; // not needed
 bool magStateOld;
 void setupHalSensor()
 {
-    //pinMode(analogPin, INPUT);
     pinMode(digitalPin, INPUT);
     Serial.begin(9600);
     magStateOld = digitalRead(digitalPin);
@@ -100,7 +98,7 @@ inline bool positiveEdge(bool state, bool &oldState)
 
 double calculateRpmFromRevolutions(int revolutions, unsigned long revolutionsTime)
 {
-    double ROAD_WHEEL_TO_TACH_WHEEL_RATIO = 20.68;
+    double ROAD_WHEEL_TO_TACH_WHEEL_RATIO = 1; //20.68;
     double instantaneousRpm = revolutions * 60 * 1000 / revolutionsTime / ROAD_WHEEL_TO_TACH_WHEEL_RATIO;
     //    Serial.printf("revolutionsTime: %d, rev: %d , instantaneousRpm: %2.9f \n",
     //                    revolutionsTime, revolutions, instantaneousRpm);
@@ -216,8 +214,7 @@ void transmitFTMS(double rpm, double avgRpm, double kph, double avgKph, double p
     bool connecting = deviceConnected && !oldDeviceConnected;
     
     byte bikeData[20]={0x56,0x09, // these bytes are the flags for
-                    // instSpeed (0 counts as true here), avgSpeed(1), instCadence (2),  
-                    // total distance (4), instPower (6), expended energy (8), elapsed time (11)
+                    // instSpeed (0 counts as true here), avgSpeed(1), instCadence (2), total distance (4), instPower (6), expended energy (8), elapsed time (11)
                     (uint8_t)transmittedKph,       (uint8_t)(transmittedKph >> 8),
                     (uint8_t)transmittedAvgKph,    (uint8_t)(transmittedAvgKph >> 8),
                     (uint8_t)transmittedRpm,       (uint8_t)(transmittedRpm >> 8),
