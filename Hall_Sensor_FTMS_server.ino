@@ -79,12 +79,12 @@ void setupBluetoothServer()
     Serial.println("Waiting for a client connection to notify...");
 }
 
-int digitalPin = 18;
-int analogPin = 19;
+int digitalPin = 27;
+//int analogPin = 19; // not needed
 bool magStateOld;
 void setupHalSensor()
 {
-    pinMode(analogPin, INPUT);
+    //pinMode(analogPin, INPUT);
     pinMode(digitalPin, INPUT);
     Serial.begin(9600);
     magStateOld = digitalRead(digitalPin);
@@ -109,13 +109,13 @@ double calculateRpmFromRevolutions(int revolutions, unsigned long revolutionsTim
 
 double calculateKphFromRpm(double rpm)
 {
-    double WHEEL_RADIUS = 0.00034; // in km
-    double KM_TO_MI = 0.621371;
+    double WHEEL_RADIUS = 0.0003683; // in km
+    //double KM_TO_MI = 0.621371;
 
     double circumfrence = 2 * PI * WHEEL_RADIUS;
     double metricDistance = rpm * circumfrence;
     double kph = metricDistance * 60;
-    double mph = kph * KM_TO_MI; 
+    //double mph = kph * KM_TO_MI; 
                                         //    Serial.printf("rpm: %2.2f, circumfrence: %2.2f, metricDistance %2.5f , imperialDistance: %2.5f, mph: %2.2f \n",
                                         //                   rpm, circumfrence, metricDistance, imperialDistance, mph);
     return kph;
