@@ -109,7 +109,7 @@ double calculateRpmFromRevolutions(int revolutions, unsigned long revolutionsTim
 
 double calculateKphFromRpm(double rpm)
 {
-    double WHEEL_RADIUS = 0.0003683; // in km
+    double WHEEL_RADIUS = 0.0003683; // in km 29"Wheel
     //double KM_TO_MI = 0.621371;
 
     double circumfrence = 2 * PI * WHEEL_RADIUS;
