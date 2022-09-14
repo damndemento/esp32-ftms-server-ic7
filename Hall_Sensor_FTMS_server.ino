@@ -18,7 +18,7 @@
 #define FTMS_UUID "00001826-0000-1000-8000-00805f9b34fb"
 #define FITNESS_MACHINE_FEATURES_UUID "00002acc-0000-1000-8000-00805f9b34fb"
 #define INDOOR_BIKE_DATA_CHARACTERISTIC_UUID "00002ad2-0000-1000-8000-00805f9b34fb"
-#define LED_BUILTIN 2
+#define LED_BUILTIN LED_BUILTIN
 
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
@@ -98,8 +98,7 @@ inline bool positiveEdge(bool state, bool &oldState)
 
 double calculateRpmFromRevolutions(int revolutions, unsigned long revolutionsTime)
 {
-    double ROAD_WHEEL_TO_TACH_WHEEL_RATIO = 1; //20.68;
-    double instantaneousRpm = revolutions * 60 * 1000 / revolutionsTime / ROAD_WHEEL_TO_TACH_WHEEL_RATIO;
+    double instantaneousRpm = revolutions * 60 * 1000 / revolutionsTime;
     //    Serial.printf("revolutionsTime: %d, rev: %d , instantaneousRpm: %2.9f \n",
     //                    revolutionsTime, revolutions, instantaneousRpm);
     return instantaneousRpm;
