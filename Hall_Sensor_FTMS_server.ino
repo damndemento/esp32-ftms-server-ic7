@@ -106,7 +106,7 @@ double calculateRpmFromRevolutions(int revolutions, unsigned long revolutionsTim
 
 double calculateKphFromRpm(double rpm)
 {
-    double WHEEL_RADIUS = 0.0003683; // in km 29"Wheel
+    double WHEEL_RADIUS = 0.0003682; // in km 29"Wheel
     //double KM_TO_MI = 0.621371;
 
     double circumfrence = 2 * PI * WHEEL_RADIUS;
@@ -116,6 +116,13 @@ double calculateKphFromRpm(double rpm)
                                         //    Serial.printf("rpm: %2.2f, circumfrence: %2.2f, metricDistance %2.5f , imperialDistance: %2.5f, mph: %2.2f \n",
                                         //                   rpm, circumfrence, metricDistance, imperialDistance, mph);
     return kph;
+}
+
+double calculateCadenceFromRpm(double rpm)
+{
+    double cadence = rpm / 4; // 4 revolutions per pedal turn
+
+    return cadence;
 }
 
 unsigned long distanceTime = 0;
@@ -193,36 +200,40 @@ void printArray(byte input[], int sizeOfArray)
 
 byte features[] = {0x07,0x52,0x00,0x00}; 
 // 0x07,0x52 (0x48,0x4a in big-endian) are flags for
-// avgSpeed (0), cadence (1), total distance (2), expended energy (9), elapsed time (12), power measurement (14)  
-void transmitFTMS(double rpm, double avgRpm, double kph, double avgKph, double power, double avgPower, 
+// avgSpeed (0), cadence (1), total distance (2), expended energy (9), elapsed time (12), power measurement (14)
+void transmitFTMS(double rpm, double avgRpm, double cadence, double avgCadence, double kph, double avgKph, double power, double avgPower, 
                   double runningDistance, double runningCalories, unsigned long elapsedTime)
 {
-    uint16_t transmittedKph     = (uint16_t) (kph * 100);         //(0.01 resolution)
-    uint16_t transmittedTime    = (uint16_t) (elapsedTime / 1000);//(1.0 resolution) 
-    uint16_t transmittedAvgKph  = (uint16_t) (avgKph * 100);      //(0.01 resolution)
-    uint16_t transmittedRpm     = (uint16_t) (rpm * 2);           //(0.5 resolution)
-    uint16_t transmittedAvgRpm  = (uint16_t) (avgRpm * 2);         //(0.1 resolution)
-    uint16_t transmittedPower   = (uint16_t) (power * 2);      //(1.0 resolution)
-    uint16_t transmittedAvgPower= (uint16_t) (avgPower * 2);        //(1.0 resolution)
-    uint32_t transmittedDistance= (uint32_t) (runningDistance * 1000);// runningDistance in km, need m 
-    uint16_t transmittedTotalCal= (uint16_t) (runningCalories * 10);                   //(1.0 resolution)
-    uint16_t transmittedCalHr   = (uint16_t) (runningCalories * 60 * 60 / elapsedTime);//(1.0 resolution) 
-    uint8_t transmittedCalMin   = (uint8_t)  (runningCalories * 60 / elapsedTime);     //(1.0 resolution)
+    uint16_t transmittedKph        = (uint16_t) (kph * 100);         //(0.01 resolution)
+    uint16_t transmittedTime       = (uint16_t) (elapsedTime / 1000);//(1.0 resolution)
+    uint16_t transmittedAvgKph     = (uint16_t) (avgKph * 100);      //(0.01 resolution)
+    uint16_t transmittedRpm        = (uint16_t) (rpm * 2);           //(0.5 resolution)
+    uint16_t transmittedAvgRpm     = (uint16_t) (avgRpm * 2);         //(0.1 resolution)
+    uint16_t transmittedCadence    = (uint16_t) (cadence * 2);
+    uint16_t transmittedAvgCadence = (uint16_t) (avgCadence * 2);
+    uint16_t transmittedPower      = (uint16_t) (power * 2);      //(1.0 resolution)
+    uint16_t transmittedAvgPower   = (uint16_t) (avgPower * 2);        //(1.0 resolution)
+    uint32_t transmittedDistance   = (uint32_t) (runningDistance * 1000);// runningDistance in km, need m 
+    uint16_t transmittedTotalCal   = (uint16_t) (runningCalories * 10);                   //(1.0 resolution)
+    uint16_t transmittedCalHr      = (uint16_t) (runningCalories * 60 * 60 / elapsedTime);//(1.0 resolution) 
+    uint8_t transmittedCalMin      = (uint8_t)  (runningCalories * 60 / elapsedTime);     //(1.0 resolution)
     
     bool disconnecting = !deviceConnected && oldDeviceConnected;
     bool connecting = deviceConnected && !oldDeviceConnected;
     
     byte bikeData[20]={0x56,0x09, // these bytes are the flags for
                     // instSpeed (0 counts as true here), avgSpeed(1), instCadence (2), total distance (4), instPower (6), expended energy (8), elapsed time (11)
-                    (uint8_t)transmittedKph,       (uint8_t)(transmittedKph >> 8),
-                    (uint8_t)transmittedAvgKph,    (uint8_t)(transmittedAvgKph >> 8),
-                    (uint8_t)transmittedRpm,       (uint8_t)(transmittedRpm >> 8),
-                    //(uint8_t)transmittedAvgRpm,    (uint8_t)(transmittedAvgRpm >> 8), //NOTE: commented out to avoid exceeding MTU                   
-                    (uint8_t)transmittedDistance,  (uint8_t)(transmittedDistance >> 8),(uint8_t)(transmittedDistance >> 16),        
-                    (uint8_t)transmittedPower,     (uint8_t)(transmittedPower >> 8), //NOTE: Actually SINT16, but my bike can't peddle backwards
-                    //(uint8_t)transmittedAvgPower,(uint8_t)(transmittedAvgPower >> 8), //NOTE: commented out to avoid exceeding MTU                        
-                    (uint8_t)transmittedTotalCal,  (uint8_t)(transmittedTotalCal >> 8),                    
-                    (uint8_t)transmittedCalHr,     (uint8_t)(transmittedCalHr >> 8),                    
+                    (uint8_t)transmittedKph,        (uint8_t)(transmittedKph >> 8),
+                    (uint8_t)transmittedAvgKph,     (uint8_t)(transmittedAvgKph >> 8),
+                    (uint8_t)transmittedCadence,    (uint8_t)(transmittedCadence >> 8),
+                    //(uint8_t)transmittedRpm,        (uint8_t)(transmittedRpm >> 8),
+                    //(uint8_t)transmittedAvgRpm,     (uint8_t)(transmittedAvgRpm >> 8), //NOTE: commented out to avoid exceeding MTU
+                    //(uint8_t)transmittedAvgCadence, (uint8_t)(transmittedAvgCadence >> 8),
+                    (uint8_t)transmittedDistance,   (uint8_t)(transmittedDistance >> 8),(uint8_t)(transmittedDistance >> 16),        
+                    (uint8_t)transmittedPower,      (uint8_t)(transmittedPower >> 8), //NOTE: Actually SINT16, but my bike can't peddle backwards
+                    //(uint8_t)transmittedAvgPower,   (uint8_t)(transmittedAvgPower >> 8), //NOTE: commented out to avoid exceeding MTU                        
+                    (uint8_t)transmittedTotalCal,   (uint8_t)(transmittedTotalCal >> 8),                    
+                    (uint8_t)transmittedCalHr,      (uint8_t)(transmittedCalHr >> 8),                    
                     transmittedCalMin,
                     (uint8_t)transmittedTime,      (uint8_t)(transmittedTime >> 8)
       };
@@ -254,10 +265,12 @@ unsigned long elapsedSampleTime = 0;
 int rev = 0;
 double intervalEntries = 0;
 double totalRpm = 0;
+double totalCadence = 0;
 double totaKph = 0;
 double totalPower = 0;
 double runningCalories = 0.0;
 double runningDistance = 0.0;
+
 void loop()
 {
     unsigned long intervalTime = millis() - elapsedTime;
@@ -271,30 +284,34 @@ void loop()
     if (intervalTime > 500)
     {
         double rpm = calculateRpmFromRevolutions(rev, intervalTime);
+        double cadence = calculateCadenceFromRpm(rpm);
         double kph = calculateKphFromRpm(rpm);
         double power = calculatePowerFromKph(kph);
         
         intervalEntries++;
         totalRpm += rpm;
+        totalCadence += cadence;
         totaKph += kph;
         totalPower += power;
         
-        double avgRpm   = totalRpm   / intervalEntries;
-        double avgKph   = totaKph    / intervalEntries;
-        double avgPower = totalPower / intervalEntries;
+        double avgRpm     = totalRpm     / intervalEntries;
+        double avgCadence = totalCadence / intervalEntries;
+        double avgKph     = totaKph      / intervalEntries;
+        double avgPower   = totalPower   / intervalEntries;
         runningDistance += calculateDistanceFromKph(intervalTime, kph);
         
         runningCalories += calculateCaloriesFromPower(intervalTime, power);
         Serial.println("\n----------------------------------------------------");
         Serial.printf("elapsedTime: %d, rev: %d \n", elapsedTime, rev);
         Serial.printf("rpm: %2.2f, avgRpm: %2.2f \n", rpm, avgRpm);
+        Serial.printf("cadence: %2.2f, avgCadence: %2.2f \n", cadence, avgCadence);
         Serial.printf("kph: %2.2f, avgKph: %2.2f \n", kph, avgKph);
         Serial.printf("power: %2.2f watts, avgPower: %2.2 watts \n", power, avgPower);
         Serial.printf("distance: %2.2f, calories:  %2.5f \n", runningDistance, runningCalories);
 
         indicateRpmWithLight(rpm);
         // bluetooth becomes congested if too many packets are sent. In a 6 hour test I was able to go as frequent as 3ms.
-        transmitFTMS(rpm,avgRpm,kph,avgKph,power,avgPower,runningDistance,runningCalories,elapsedTime);
+        transmitFTMS(rpm,avgRpm,cadence,avgCadence,kph,avgKph,power,avgPower,runningDistance,runningCalories,elapsedTime);
 
         rev = 0;
         elapsedTime = millis();
