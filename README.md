@@ -10,7 +10,9 @@ I added two 1k resistors:
 
 ![resistor pins](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_resistor_pins.jpg)
 
-Then I splitted a [0.5m 3.5mm mono cable](https://www.amazon.de/gp/product/B011SSAUM0/ref=ppx_yo_dt_b_asin_image_o07_s00?ie=UTF8&psc=1) into half and drilled the wires together and soldered them to the resistors on the board.
+Then I splitted a 0.5m mono cable with 3.5mm jack into half and drilled the wires together and soldered them to the resistors on the board.
+
+![mono cable](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/3.5mm_mono_extension_cable.jpg)
 
 *!!! MAKE SURE TO USE A CABLE WITH ONE MALE AND ONE FEMALE PLUG !!!*
 
