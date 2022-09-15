@@ -26,6 +26,8 @@ Then you can connect it to your bike without harming the IC7
 
 just disconnect the display from the sensor and plug the D1 mini ESP32 in between - et voilá - your IC7 speaks FTMS now.
 
+![D1 connected](https://github.com/damndemento/esp32-ftms-server-ic7/blob/main/D1_connected.jpg)
+
 Ready to connect to Zwift, WahooRGT or similar...
 
 actually it is powered with 5v via the usb jack - but I'm planning to add a rechargeable battery and a shield for charging... and last but not least a little case to fit.
