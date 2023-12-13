@@ -230,11 +230,11 @@ void transmitFTMS(double rpm, double avgRpm, double cadence, double avgCadence, 
                     //(uint8_t)transmittedRpm,        (uint8_t)(transmittedRpm >> 8),
                     //(uint8_t)transmittedAvgRpm,     (uint8_t)(transmittedAvgRpm >> 8), //NOTE: commented out to avoid exceeding MTU
                     //(uint8_t)transmittedAvgCadence, (uint8_t)(transmittedAvgCadence >> 8),
-                    (uint8_t)transmittedDistance,   (uint8_t)(transmittedDistance >> 8),(uint8_t)(transmittedDistance >> 16),        
+                    (uint8_t)transmittedDistance,   (uint8_t)(transmittedDistance >> 8),(uint8_t)(transmittedDistance >> 16),
                     (uint8_t)transmittedPower,      (uint8_t)(transmittedPower >> 8), //NOTE: Actually SINT16, but my bike can't peddle backwards
-                    //(uint8_t)transmittedAvgPower,   (uint8_t)(transmittedAvgPower >> 8), //NOTE: commented out to avoid exceeding MTU                        
-                    (uint8_t)transmittedTotalCal,   (uint8_t)(transmittedTotalCal >> 8),                    
-                    (uint8_t)transmittedCalHr,      (uint8_t)(transmittedCalHr >> 8),                    
+                    (uint8_t)transmittedAvgPower,   (uint8_t)(transmittedAvgPower >> 8),
+                    (uint8_t)transmittedTotalCal,   (uint8_t)(transmittedTotalCal >> 8),
+                    //(uint8_t)transmittedCalHr,      (uint8_t)(transmittedCalHr >> 8), //NOTE: commented out to avoid exceeding MTU
                     transmittedCalMin,
                     (uint8_t)transmittedTime,      (uint8_t)(transmittedTime >> 8)
       };
