@@ -79,7 +79,8 @@ void setupBluetoothServer()
     Serial.println("Waiting for a client connection to notify...");
 }
 
-int digitalPin = 32;
+int digitalPin = 27;
+//int digitalPin = 32;
 bool magStateOld;
 void setupHalSensor()
 {
