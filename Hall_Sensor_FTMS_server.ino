@@ -49,7 +49,7 @@ void setupBluetoothServer()
 {
     Serial.begin(115200);
     Serial.println("Starting BLE work!");
-    BLEDevice::init("IC Bike");
+    BLEDevice::init("IC7 Bike");
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new MyServerCallbacks());
     BLEService *pService = pServer->createService(FTMS_UUID);
@@ -79,7 +79,7 @@ void setupBluetoothServer()
     Serial.println("Waiting for a client connection to notify...");
 }
 
-int digitalPin = 27;
+int digitalPin = 32;
 bool magStateOld;
 void setupHalSensor()
 {
@@ -106,7 +106,8 @@ double calculateRpmFromRevolutions(int revolutions, unsigned long revolutionsTim
 
 double calculateKphFromRpm(double rpm)
 {
-    double WHEEL_RADIUS = 0.0003682; // in km 29"Wheel
+    double WHEEL_RADIUS = 0.00034; // in km 28"Wheel
+    //double WHEEL_RADIUS = 0.0003682; // in km 29"Wheel
     //double KM_TO_MI = 0.621371;
 
     double circumfrence = 2 * PI * WHEEL_RADIUS;
