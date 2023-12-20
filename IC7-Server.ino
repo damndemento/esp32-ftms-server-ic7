@@ -313,8 +313,8 @@ void loop()
         Serial.printf("distance: %2.2f, calories:  %2.5f \n", runningDistance, runningCalories);
 
         indicateRpmWithLight(rpm);
-        // bluetooth becomes congested if too many packets are sent. In a 6 hour test I was able to go as frequent as 3ms.
-        transmitFTMS(rpm,avgRpm,cadence,avgCadence,kph,avgKph,power,avgPower,runningDistance,runningCalories,elapsedTime);
+        // bluetooth becomes congested if too many packets are sent. In a 6 hour test I was able to go as frequent as 3ms.        
+        transmitFTMS(kph,avgKph,cadence,avgCadence,runningDistance,power,runningCalories,avgPower,elapsedTime);
 
         rev = 0;
         elapsedTime = millis();
