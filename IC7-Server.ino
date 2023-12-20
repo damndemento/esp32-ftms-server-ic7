@@ -203,46 +203,47 @@ void printArray(byte input[], int sizeOfArray)
 byte features[] = {0x07,0x52,0x00,0x00}; 
 // 0x07,0x52 (0x48,0x4a in big-endian) are flags for
 // avgSpeed (0), cadence (1), total distance (2), expended energy (9), elapsed time (12), power measurement (14)
-void transmitFTMS(double rpm, double avgRpm, double cadence, double avgCadence, double kph, double avgKph, double power, double avgPower, 
-                  double runningDistance, double runningCalories, unsigned long elapsedTime)
+void transmitFTMS(double kph, double avgKph, double cadence, double avgCadence, double runningDistance,
+                  double power, double runningCalories, double avgPower, unsigned long elapsedTime)
 {
     uint16_t transmittedKph        = (uint16_t) (kph * 100);         //(0.01 resolution)
-    uint16_t transmittedTime       = (uint16_t) (elapsedTime / 1000);//(1.0 resolution)
     uint16_t transmittedAvgKph     = (uint16_t) (avgKph * 100);      //(0.01 resolution)
-    uint16_t transmittedRpm        = (uint16_t) (rpm * 2);           //(0.5 resolution)
-    uint16_t transmittedAvgRpm     = (uint16_t) (avgRpm * 2);         //(0.1 resolution)
     uint16_t transmittedCadence    = (uint16_t) (cadence * 2);
     uint16_t transmittedAvgCadence = (uint16_t) (avgCadence * 2);
-    uint16_t transmittedPower      = (uint16_t) (power * 2);      //(1.0 resolution)
-    uint16_t transmittedAvgPower   = (uint16_t) (avgPower * 2);        //(1.0 resolution)
     uint32_t transmittedDistance   = (uint32_t) (runningDistance * 1000);// runningDistance in km, need m 
+    uint16_t transmittedPower      = (uint16_t) (power * 2);      //(1.0 resolution)
     uint16_t transmittedTotalCal   = (uint16_t) (runningCalories * 10);                   //(1.0 resolution)
     uint16_t transmittedCalHr      = (uint16_t) (runningCalories * 60 * 60 / elapsedTime);//(1.0 resolution) 
     uint8_t transmittedCalMin      = (uint8_t)  (runningCalories * 60 / elapsedTime);     //(1.0 resolution)
+    uint16_t transmittedAvgPower   = (uint16_t) (avgPower * 2);        //(1.0 resolution)
+    uint16_t transmittedTime       = (uint16_t) (elapsedTime / 1000);//(1.0 resolution)
     
     bool disconnecting = !deviceConnected && oldDeviceConnected;
     bool connecting = deviceConnected && !oldDeviceConnected;
     
-    byte bikeData[20]={0x56,0x09, // these bytes are the flags for
-                    // instSpeed (0 counts as true here), avgSpeed(1), instCadence (2), total distance (4), instPower (6), expended energy (8), elapsed time (11)
-                    (uint8_t)transmittedKph,        (uint8_t)(transmittedKph >> 8),
-                    (uint8_t)transmittedAvgKph,     (uint8_t)(transmittedAvgKph >> 8),
-                    (uint8_t)transmittedCadence,    (uint8_t)(transmittedCadence >> 8),
-                    //(uint8_t)transmittedRpm,        (uint8_t)(transmittedRpm >> 8),
-                    //(uint8_t)transmittedAvgRpm,     (uint8_t)(transmittedAvgRpm >> 8), //NOTE: commented out to avoid exceeding MTU
-                    //(uint8_t)transmittedAvgCadence, (uint8_t)(transmittedAvgCadence >> 8),
-                    (uint8_t)transmittedDistance,   (uint8_t)(transmittedDistance >> 8),(uint8_t)(transmittedDistance >> 16),
-                    (uint8_t)transmittedPower,      (uint8_t)(transmittedPower >> 8), //NOTE: Actually SINT16, but my bike can't peddle backwards
-                    (uint8_t)transmittedAvgPower,   (uint8_t)(transmittedAvgPower >> 8),
-                    (uint8_t)transmittedTotalCal,   (uint8_t)(transmittedTotalCal >> 8),
-                    //(uint8_t)transmittedCalHr,      (uint8_t)(transmittedCalHr >> 8), //NOTE: commented out to avoid exceeding MTU
-                    transmittedCalMin,
-                    (uint8_t)transmittedTime,      (uint8_t)(transmittedTime >> 8)
-      };
+    byte bikeData1[20]={0x0E,0x15,
+                (uint8_t)transmittedKph,        (uint8_t)(transmittedKph >> 8),
+                (uint8_t)transmittedAvgKph,     (uint8_t)(transmittedAvgKph >> 8),
+                (uint8_t)transmittedCadence,    (uint8_t)(transmittedCadence >> 8),
+                (uint8_t)transmittedAvgCadence, (uint8_t)(transmittedAvgCadence >> 8),
+                (uint8_t)transmittedDistance,   (uint8_t)(transmittedDistance >> 8), (uint8_t)(transmittedDistance >> 16),        
+                (uint8_t)transmittedPower,      (uint8_t)(transmittedPower >> 8),                   
+                (uint8_t)transmittedTotalCal,   (uint8_t)(transmittedTotalCal >> 8),                    
+                (uint8_t)transmittedCalHr,      (uint8_t)(transmittedCalHr >> 8),                    
+                transmittedCalMin
+    };
+    byte bikeData2[6]={0x01, 0x40,
+                (uint8_t)transmittedAvgPower,   (uint8_t)(transmittedAvgPower >> 8),
+                (uint8_t)transmittedTime,      (uint8_t)(transmittedTime >> 8)
+    };
+
     if (deviceConnected)
     {
         //NOTE: Even though the ATT_MTU for BLE is 23 bytes, android by default only captures the first 20 bytes.
-        indoorBikeDataCharacteristic->setValue((uint8_t *)&bikeData, 20);
+        indoorBikeDataCharacteristic->setValue((uint8_t *)&bikeData1, 20);
+        indoorBikeDataCharacteristic->notify();
+        delay(250);
+        indoorBikeDataCharacteristic->setValue((uint8_t *)&bikeData2, 6);
         indoorBikeDataCharacteristic->notify();
     }
     
